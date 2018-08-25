@@ -6,6 +6,7 @@ class tableBody extends Component {
     Columns: Array
     Items: Array
   */
+
   renderCell = (item, col) => {
     if (col.content){
       return col.content(item);
@@ -23,7 +24,13 @@ class tableBody extends Component {
       <tbody>
         {items.map(item => 
           <tr key={item._id}>
-            {columns.map(col => <td key={this.genereateKey(item, col)}>{this.renderCell(item, col)}</td>)}
+            {columns.map(col => {
+              return (
+              <td key={this.genereateKey(item, col)}>
+                 {this.renderCell(item, col)} 
+              </td>
+              )
+            })}
           </tr>
         )}
       </tbody>

@@ -99,7 +99,6 @@ class Movies extends Component {
             currentPage={currentPage} 
             totalCount={count} 
             onPageChange={this.handlePageChange}
-
           />
         </div>        
       </div>

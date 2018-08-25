@@ -23,6 +23,10 @@
 }
 */
 
+.navbar{
+  margin-bottom: 30px;
+}
+
 .fa {
   cursor: pointer;
 }
