@@ -6,7 +6,7 @@ import ListGroup from './common/listGroup';
 import MoviesTable from './moviesTable';
 import {paginate} from '../utils/paginate';
 import _ from 'lodash';
-
+import {Link} from 'react-router-dom';
 
 class Movies extends Component {
 
@@ -86,7 +86,12 @@ class Movies extends Component {
           />
         </div>  
         <div className="col">
-          <p> There are {count} movies in the DB </p>
+          <Link 
+            className="btn btn-primary" 
+            to="/movies/new"
+          >New Movie
+          </Link> 
+          <p> Showing {count} movies in the DB </p>
           <MoviesTable 
             movies={movies} 
             onDelete={this.handleDelete} 

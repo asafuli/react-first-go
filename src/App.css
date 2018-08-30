@@ -27,6 +27,10 @@
   margin-bottom: 30px;
 }
 
+.btn-primary {
+  margin-bottom: 20px;
+}
+
 .fa {
   cursor: pointer;
 }
