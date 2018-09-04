@@ -1,13 +1,70 @@
-import React from 'react';
-import NewMovieForm from './newMovieForm';
+import React, { Component } from 'react';
+import Joi from 'joi-browser';
+import Form from './common/form';
+import { saveMovie, getMovie } from '../services/fakeMovieService';
+import { getGenres } from '../services/fakeGenreService';
 
-const MovieForm = ({match, history}) => {
-  return (
-    <div>
-      <NewMovieForm/>
-      <button className="btn btn-primary" onClick={() => history.push('/movies')}>Save</button>
-    </div>
-  );
+class MovieForm extends Form {
+  state = {
+    data: {title: "", genreId: "", numberInStock: "", dailyRentalRate: "" },
+    genres: [],
+    errors: {},
+  }
+
+  schema = {
+    _id: Joi.string(),
+    title: Joi.string().required().label("Title"),
+    genreId: Joi.string().required().label("Genre"),
+    numberInStock: Joi.number().min(0).max(100).required().label("Number in Stock"),
+    dailyRentalRate: Joi.number().min(0).max(10).required().label("Rate"),
+  }
+
+  componentDidMount = () => {
+    const genres = getGenres();
+    this.setState({ genres });
+
+    const movieId = this.props.match.params.id;
+    if (movieId === "new") return;
+
+    const movie = getMovie(movieId);
+    if (!movie) {
+      return this.props.history.replace("/not-found");
+    }
+    //mapToViewModel is used to convert the "movie" from the DB/Server into "movie" view //object
+    this.setState({ data: this.mapToViewModel(movie) });
+  }
+
+  mapToViewModel(movie) {
+    return {
+      _id: movie._id,
+      title: movie.title,
+      genreId: movie.genre._id,
+      numberInStock: movie.numberInStock,
+      dailyRentalRate: movie.dailyRentalRate,
+    }
+  }
+
+  doSubmit = () => {
+    const newMovie = {...this.state.data};
+    saveMovie(newMovie);
+    console.log(newMovie);
+    this.props.history.push('/movies');
+  }
+
+  render() { 
+    return (
+      <div>
+        <h1>Movie Form</h1>
+        <form onSubmit={this.handleSubmit}>
+          {this.renderInput('title','Title')}
+          {this.renderSelectList('genreId','Genre', this.state.genres)}
+          {this.renderInput('numberInStock','Number in Stock')}
+          {this.renderInput('dailyRentalRate','Rate')}
+          {this.renderButton('Save')}
+        </form>
+      </div>
+    );
+  }
 }
  
 export default MovieForm;

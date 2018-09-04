@@ -82,14 +82,14 @@ class Form extends Component {
     this.doSubmit();
   }
 
-  renderSelectList = (name, label, options, initialValue) => {
+  renderSelectList = (name, label, options,) => {
     const {data, errors} = this.state;
     return (
       <SelectList
         name={name} 
         label={label} 
         options={options}
-        value={initialValue || data[name]} 
+        value={data[name]} 
         onChange={this.handleChange} 
         error={errors[name]}  
       />
@@ -100,14 +100,14 @@ class Form extends Component {
     return <button disabled={this.validate()} className="btn btn-primary">{label}</button>
   } 
 
-  renderInput = (name, label, value, type = 'text') => {
+  renderInput = (name, label, type = 'text') => {
     const {data, errors} = this.state;
     return (
       <Input
         type={type}
         name={name} 
         label={label} 
-        value={value || data[name]} 
+        value={data[name]}
         onChange={this.handleChange} 
         error={errors[name]}
       />
