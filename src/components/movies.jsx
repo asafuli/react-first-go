@@ -32,7 +32,8 @@ class Movies extends Component {
 
   handleDelete = movie => {
     const newMovies = this.state.movies.filter(m => m._id !== movie._id);
-    this.setState({movies: newMovies});
+    const currentPage = Math.ceil(newMovies.length / this.state.pageSize);
+    this.setState({movies: newMovies, currentPage});
   }
 
   handleGenreSelect = genre => {
@@ -57,9 +58,8 @@ class Movies extends Component {
     this.setState({ currentPage: page });
   }
 
-  handleSearch = ({ currentTarget: input }) => {
-    const searchStr = input.value;
-    this.setState({ searchStr: searchStr, selectedGenre: null, currentPage: 1 })
+  handleSearch = (searchQuery) => {
+    this.setState({ searchStr: searchQuery, selectedGenre: null, currentPage: 1 })
   }
 
   getPagedData = () => {
