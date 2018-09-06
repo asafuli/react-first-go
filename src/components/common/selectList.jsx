@@ -1,6 +1,5 @@
 import React from 'react';
 
-
 const SelectList = ({name, label, options, error, ...rest}) => {
   return ( 
     <div className="form-group">

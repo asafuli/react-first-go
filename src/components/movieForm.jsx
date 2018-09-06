@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { toast } from 'react-toastify';
 import Joi from 'joi-browser';
 import Form from './common/form';
-import { saveMovie, getMovie } from '../services/fakeMovieService';
-import { getGenres } from '../services/fakeGenreService';
+import { saveMovie, getMovie } from '../services/movieServices';
+import { getGenres } from '../services/genreServices';
 
 class MovieForm extends Form {
   state = {
@@ -13,25 +14,35 @@ class MovieForm extends Form {
 
   schema = {
     _id: Joi.string(),
-    title: Joi.string().required().label("Title"),
+    title: Joi.string().min(5).max(50).required().label("Title"),
     genreId: Joi.string().required().label("Genre"),
     numberInStock: Joi.number().min(0).max(100).required().label("Number in Stock"),
     dailyRentalRate: Joi.number().min(0).max(10).required().label("Rate"),
   }
 
-  componentDidMount = () => {
-    const genres = getGenres();
+  async populateGenres(){
+    const {data: genres} = await getGenres();
     this.setState({ genres });
+  }
 
-    const movieId = this.props.match.params.id;
-    if (movieId === "new") return;
+  async populateMovie(){
+    try{
+      const movieId = this.props.match.params.id;
+      if (movieId === "new") return;
 
-    const movie = getMovie(movieId);
-    if (!movie) {
-      return this.props.history.replace("/not-found");
-    }
-    //mapToViewModel is used to convert the "movie" from the DB/Server into "movie" view //object
-    this.setState({ data: this.mapToViewModel(movie) });
+      const {data: movie} = await getMovie(movieId);
+      //mapToViewModel is used to convert the "movie" from the DB/Server into "movie" view //object
+      this.setState({ data: this.mapToViewModel(movie) });
+    } catch(ex){
+      if(ex.response && ex.response.status === 404){
+        return this.props.history.replace("/not-found");
+      }     
+    }   
+  }
+
+  async componentDidMount() {
+    await this.populateGenres();
+    await this.populateMovie();
   }
 
   mapToViewModel(movie) {
@@ -44,10 +55,14 @@ class MovieForm extends Form {
     }
   }
 
-  doSubmit = () => {
+  doSubmit = async () => {
     const newMovie = {...this.state.data};
-    saveMovie(newMovie);
-    console.log(newMovie);
+    try {
+      await saveMovie(newMovie);
+    } catch(ex){
+      console.log(ex);
+      toast.error('Failed to save the movie to the DB');
+    }
     this.props.history.push('/movies');
   }
 

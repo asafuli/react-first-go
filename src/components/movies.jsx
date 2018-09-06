@@ -1,6 +1,7 @@
-import React, { Component } from 'react'
-import { getMovies } from '../services/fakeMovieService'
-import { getGenres } from '../services/fakeGenreService'
+import React, { Component } from 'react';
+import { getMovies, deleteMovie} from '../services/movieServices';
+import { getGenres } from '../services/genreServices';
+import { toast } from 'react-toastify';
 import Pagination from './common/pagination';
 import ListGroup from './common/listGroup';
 import MoviesTable from './moviesTable';
@@ -25,15 +26,29 @@ class Movies extends Component {
     selectedGenre: null,
   }
 
-  componentDidMount(){
-    const genres = [{_id: '', name: 'All Genres'}, ...getGenres()]
-    this.setState({genres, movies: getMovies()});
+  async componentDidMount(){
+    const {data: genresFromDB} = await getGenres();
+    const {data: moviesFromDB} = await getMovies();
+    const genres = [{_id: '', name: 'All Genres'}, ...genresFromDB]
+    this.setState({genres, movies: moviesFromDB});
   }
 
-  handleDelete = movie => {
-    const newMovies = this.state.movies.filter(m => m._id !== movie._id);
-    const currentPage = Math.ceil(newMovies.length / this.state.pageSize);
-    this.setState({movies: newMovies, currentPage});
+  handleDelete = async (movie) => {
+    const originalMovies = this.state.movies;
+    const newMovies = originalMovies.filter(m => m._id !== movie._id);
+    //const currentPage = Math.ceil(newMovies.length / this.state.pageSize);
+    this.setState({movies: newMovies});
+    try {
+      await deleteMovie(movie._id);
+    } catch(ex){
+      if (ex.response && ex.response.status === 404){
+        toast.error('This movie has already been deleted...')
+      } else {
+        toast.error('Unexpectd error occurred while trying to delete the movie...')
+      }
+      console.log(ex);
+      this.setState({movies: originalMovies});
+    }
   }
 
   handleGenreSelect = genre => {
@@ -65,8 +80,8 @@ class Movies extends Component {
   getPagedData = () => {
 
     const { pageSize, currentPage, movies: allMovies, selectedGenre, sortColumn, searchStr } = this.state;
+    let filteredMovies = allMovies;
 
-    let filteredMovies =allMovies;
     if(searchStr){
       filteredMovies = allMovies.filter(m => _.startsWith(m.title.toLowerCase(), searchStr.toLowerCase() ));
     } else if (selectedGenre && selectedGenre._id){
@@ -77,6 +92,7 @@ class Movies extends Component {
     const movies = paginate(sortedMovies, currentPage, pageSize);
 
     return {totalCount: sortedMovies.length, data: movies};
+    
   }
   render() { 
 
