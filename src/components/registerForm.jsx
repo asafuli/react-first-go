@@ -1,6 +1,8 @@
 import React from 'react';
 import Form from './common/form';
 import Joi from 'joi-browser';
+import * as userService from '../services/userService';
+
 
 class RegisterForm extends Form {
 
@@ -15,9 +17,25 @@ class RegisterForm extends Form {
     name: Joi.string().required().label('Name'),
   }
 
-  doSubmit = () => {
-    //Call the server
-    console.log("submitted");
+  doSubmit = async () => {
+    try{
+      const response = await userService.register(this.state.data);
+      localStorage.setItem("token", response.headers['x-auth-token']);
+       /* commenting the below and instead calling window.location 
+         to perform a full reload of the App after login in order
+         to call 'componentDidMount again in App.js'  
+
+      this.props.history.push('/');
+      
+      */
+     window.location('/');
+    } catch(ex){
+      if(ex.response && ex.response.status === 400){
+        const errors = {...this.state.errors};
+        errors.username = ex.response.data;
+        this.setState({ errors });
+      }
+    }
   }
 
 

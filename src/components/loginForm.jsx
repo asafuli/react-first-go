@@ -1,11 +1,12 @@
 import React from 'react';
 import Joi from 'joi-browser';
 import Form from './common/form';
+import { login } from '../services/authService';
 
 class LoginForm extends Form {
  
   /* React.createRef() creates reference which we can set to a DOM element using "ref" attribute  
-    (in this case can be used to autofocus the username by addoing a lifecycle 
+    (in this case can be used to autofocus the username by adding a lifecycle 
     method (i.e componentDidMount) and calling autofocus on the ref)
     NOTE: SHOULD TRY TO AVOID USING React.createRef
     
@@ -19,7 +20,7 @@ class LoginForm extends Form {
  state = {
 
   /*Note: For controlled elements - we have to initialize the state with some value 
-   (null or undefined are considrered by React aas uncontrolloed elements)
+   (null or undefined are considrered by React as uncontrolloed elements)
   */
   data: {username: "", password: ""},
   errors: {},
@@ -30,9 +31,27 @@ class LoginForm extends Form {
     password: Joi.string().required().label('Password'),
   }
 
-  doSubmit = () => {
-    //Call the server
-    console.log("submitted");
+  doSubmit = async () => {
+    try{
+      const { data } = this.state;
+      const { data:jwt } = await login(data.username, data.password);
+      localStorage.setItem("token",jwt);
+      /* commenting the below and instead calling window.location 
+         to perform a full reload of the App after login in order
+         to call 'componentDidMount again in App.js'  
+
+      this.props.history.push('/');
+      
+      */
+     window.location = '/';
+    } catch(ex){
+      if(ex.response && ex.response.status === 400){
+        const errors = {...this.state.errors};
+        errors.username = ex.response.data;
+        this.setState({ errors });
+        console.log(errors);
+      }
+    }
   } 
   render() { 
 
