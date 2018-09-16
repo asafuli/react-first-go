@@ -60,6 +60,7 @@ class MovieForm extends Form {
     try {
       await saveMovie(newMovie);
     } catch(ex){
+      console.log('reached savemovie error');
       console.log(ex);
       toast.error('Failed to save the movie to the DB');
     }

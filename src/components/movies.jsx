@@ -42,7 +42,9 @@ class Movies extends Component {
       await deleteMovie(movie._id);
     } catch(ex){
       if (ex.response && ex.response.status === 404){
-        toast.error('This movie has already been deleted...')
+        toast.error('This movie has already been deleted')
+      } else if (ex.response && ex.response.status === 403){
+        toast.info('You must be an admin to delete a movie')
       } else {
         toast.error('Unexpectd error occurred while trying to delete the movie...')
       }
@@ -98,6 +100,7 @@ class Movies extends Component {
 
     const { pageSize, currentPage, genres, selectedGenre, sortColumn } = this.state;
     const {totalCount: count, data: movies } = this.getPagedData();
+    const { user } = this.props;
 
     return (count === 0 
       ? <p> There are no movies in the DB </p> 
@@ -113,11 +116,11 @@ class Movies extends Component {
           />
         </div>  
         <div className="col">
-          <Link 
+          {user && (<Link 
             className="btn btn-primary" 
             to="/movies/new"
           >New Movie
-          </Link> 
+          </Link>)}
           <p> Showing {count} movies in the DB </p>
           <SearchBox 
             value={this.state.searchStr} 

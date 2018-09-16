@@ -16,8 +16,6 @@ export function saveMovie(movie) {
     delete(body._id);
     return http.put(`${moviesEndPoint}/${movie._id}`, body);
   } else {
-    logger.log('movie to save: ', movie);
-    console.log('movie to save: ', movie);
     return http.post(moviesEndPoint, movie);
   }
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import Form from './common/form';
 import Joi from 'joi-browser';
+import auth from '../services/authService';
 import * as userService from '../services/userService';
 
 
@@ -20,7 +21,8 @@ class RegisterForm extends Form {
   doSubmit = async () => {
     try{
       const response = await userService.register(this.state.data);
-      localStorage.setItem("token", response.headers['x-auth-token']);
+      auth.loginWithJwt(response.headers['x-auth-token']);
+      
        /* commenting the below and instead calling window.location 
          to perform a full reload of the App after login in order
          to call 'componentDidMount again in App.js'  
@@ -28,7 +30,8 @@ class RegisterForm extends Form {
       this.props.history.push('/');
       
       */
-     window.location('/');
+      window.location = '/';
+     
     } catch(ex){
       if(ex.response && ex.response.status === 400){
         const errors = {...this.state.errors};
