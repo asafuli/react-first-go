@@ -1,7 +1,8 @@
 import http from './httpService';
 import jwtDecode from 'jwt-decode';
-import { authEndPoint } from '../config/config.json';
+//import { authEndPoint } from '../config/config.json';
 
+const authEndPoint = '/auth';
 //***Check why tokenKey is undefined inside getJwt()
 //const tokenKey = 'token';
 

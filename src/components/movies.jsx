@@ -102,9 +102,7 @@ class Movies extends Component {
     const {totalCount: count, data: movies } = this.getPagedData();
     const { user } = this.props;
 
-    return (count === 0 
-      ? <p> There are no movies in the DB </p> 
-      : 
+    return (
       <div className='row'>
         <div className="col-3">
           <ListGroup 

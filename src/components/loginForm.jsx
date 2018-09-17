@@ -42,8 +42,8 @@ class LoginForm extends Form {
       this.props.history.push('/');
       
       */
-     window.location = '/';
-     
+     const { state } = this.props.location;
+     window.location = state ? state.from.pathname : '/movies';
     } catch(ex){
       if(ex.response && ex.response.status === 400){
         const errors = {...this.state.errors};

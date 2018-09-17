@@ -1,6 +1,8 @@
 import logger from './loggerService';
 import http from './httpService';
-import { moviesEndPoint } from '../config/config.json'
+//import { moviesEndPoint } from '../config/config.json'
+
+const moviesEndPoint = '/movies';
 
 export function getMovies() {
   return http.get(moviesEndPoint);
