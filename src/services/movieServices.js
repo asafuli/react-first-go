@@ -1,4 +1,3 @@
-import logger from './loggerService';
 import http from './httpService';
 //import { moviesEndPoint } from '../config/config.json'
 

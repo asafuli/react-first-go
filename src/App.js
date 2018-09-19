@@ -26,7 +26,6 @@ componentDidMount = () => {
 
   render() {
     const { user } = this.state;
-    console.log("render with user as : ", user);
     return (
       <React.Fragment>
         <ToastContainer />

@@ -22,7 +22,6 @@ export function logout(){
 }
 
 export function getJwt(){
-  console.log('reached getJwt', 'token')
   return localStorage.getItem('token');
 }
 

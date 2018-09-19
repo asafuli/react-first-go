@@ -26,7 +26,7 @@ const Pagination = ({ totalCount, pageSize, onPageChange, currentPage }) => {
                   >
                     <a 
                       className="page-link" 
-                      href="#">{e}
+                      href="#!">{e}
                     </a>
                   </li>
           }) 
