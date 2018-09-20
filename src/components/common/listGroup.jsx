@@ -4,7 +4,6 @@ const ListGroup = ({ items, textProperty, valueProperty, onItemSelect, selectedI
   return (
     <ul className="list-group">
       {items.map(item => {
-        console.log(valueProperty)
         return (
           <li 
             key={item[valueProperty]} 

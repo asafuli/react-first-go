@@ -1,4 +1,5 @@
 import React from 'react';
+import logger from '../services/loggerService';
 import Joi from 'joi-browser';
 import Form from './common/form';
 import auth from '../services/authService';
@@ -50,6 +51,7 @@ class LoginForm extends Form {
         errors.username = ex.response.data;
         this.setState({ errors });
         console.log(errors);
+        logger.log(errors);
       }
     }
   } 

@@ -25,10 +25,18 @@ class Movies extends Component {
     searchStr: '',
     selectedGenre: null,
   }
+  
+  componentDidUpdate(prevProps, prevState) {
+
+    console.log("CompDidUpd : ", prevProps, prevState);
+  }
 
   async componentDidMount(){
+    console.log("movies: compDidMount");
     const {data: genresFromDB} = await getGenres();
+    console.log("movies: compDidMount - got back from getGenres with : ", genresFromDB);
     const {data: moviesFromDB} = await getMovies();
+    console.log("movies: compDidMount - got back from getMovies with : ", moviesFromDB);
     const genres = [{_id: '', name: 'All Genres'}, ...genresFromDB]
     this.setState({genres, movies: moviesFromDB});
   }
@@ -97,12 +105,12 @@ class Movies extends Component {
     
   }
   render() { 
-
+    console.log("movies: render");
     const { pageSize, currentPage, genres, selectedGenre, sortColumn } = this.state;
     const {totalCount: count, data: movies } = this.getPagedData();
     const { user } = this.props;
 
-    return (
+    return ((genres !== []) && (movies !== []) &&
       <div className='row'>
         <div className="col-3">
           <ListGroup 
