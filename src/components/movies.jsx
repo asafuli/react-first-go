@@ -111,8 +111,7 @@ class Movies extends Component {
     const { user } = this.props;
 
     return ( 
-      (movies.length === 0) ? 
-      <h3>Fetching data from server...</h3> :
+      (movies.length !== 0) &&
       (<div className='row'>
         <div className="col-3">
           <ListGroup 
