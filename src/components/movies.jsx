@@ -28,7 +28,7 @@ class Movies extends Component {
   
   componentDidUpdate(prevProps, prevState) {
 
-    console.log("CompDidUpd : ", prevProps, prevState);
+    console.log("CompDidUpd : ", prevProps, prevState , this.props, this.state);
   }
 
   async componentDidMount(){
@@ -110,8 +110,10 @@ class Movies extends Component {
     const {totalCount: count, data: movies } = this.getPagedData();
     const { user } = this.props;
 
-    return ((genres !== []) && (movies !== []) &&
-      <div className='row'>
+    return ( 
+      (movies.length === 0) ? 
+      <h3>Fetching data from server...</h3> :
+      (<div className='row'>
         <div className="col-3">
           <ListGroup 
             items={genres}
@@ -146,7 +148,7 @@ class Movies extends Component {
             onPageChange={this.handlePageChange}
           />
         </div>        
-      </div>
+      </div>)
     );
   }
 }
