@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { getMovies, deleteMovie} from '../services/movieServices';
 import { getGenres } from '../services/genreServices';
+import { rentMovie } from '../services/userService';
 import { toast } from 'react-toastify';
 import Pagination from './common/pagination';
 import ListGroup from './common/listGroup';
@@ -9,6 +10,7 @@ import {paginate} from '../utils/paginate';
 import _ from 'lodash';
 import {Link} from 'react-router-dom';
 import SearchBox from './common/searchBox';
+import { setJwt } from './../services/httpService';
 
 class Movies extends Component {
 
@@ -61,6 +63,10 @@ class Movies extends Component {
     }
   }
 
+  handleRent = async (movie, user) => {
+    await rentMovie(movie, user);
+  }
+
   handleGenreSelect = genre => {
     this.setState({selectedGenre: genre, searchStr: '', currentPage: 1});
   }
@@ -78,7 +84,7 @@ class Movies extends Component {
     newMovies[index].liked = !newMovies[index].liked 
     this.setState({movies: newMovies});
   }
-  
+
   handlePageChange = page => {
     this.setState({ currentPage: page });
   }
@@ -105,7 +111,6 @@ class Movies extends Component {
     
   }
   render() { 
-    console.log("movies: render");
     const { pageSize, currentPage, genres, selectedGenre, sortColumn } = this.state;
     const {totalCount: count, data: movies } = this.getPagedData();
     const { user } = this.props;
@@ -137,6 +142,7 @@ class Movies extends Component {
             movies={movies} 
             onDelete={this.handleDelete} 
             onLike={this.toggle} 
+            onRent={this.handleRent}
             onSort={this.handleSort}
             sortColumn={sortColumn}
           />

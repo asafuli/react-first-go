@@ -13,9 +13,11 @@ const NavBar = ({ user }) => {
         <li className="nav-item">
           <NavLink className="nav-link" to="/customers">Customers <span className="sr-only">(current)</span></NavLink>
         </li>
-        <li className="nav-item">
-          <NavLink className="nav-link" to="/rentals">Rentals</NavLink>
-        </li> 
+        {user && <React.Fragment> 
+          <li className="nav-item">
+            <NavLink className="nav-link" to="/rentals">My rentals</NavLink>
+          </li>
+        </React.Fragment>}
       </ul>
       <ul className="navbar-nav navbar-right">
         {!user && <React.Fragment>  

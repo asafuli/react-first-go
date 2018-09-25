@@ -22,7 +22,7 @@ axios.interceptors.response.use(null, error => {
 
 export function setJwt(jwt){
   //In order to send the jwt to the server as a customized header (otherwise we will get 401)
-axios.defaults.headers.common['x-auth-token'] = jwt;
+  axios.defaults.headers.common['x-auth-token'] = jwt;
 }
 
 
@@ -30,6 +30,7 @@ export default {
   get: axios.get,
   post: axios.post,
   put: axios.put,
+  patch: axios.patch,
   delete: axios.delete,
   setJwt
 }

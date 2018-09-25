@@ -18,19 +18,30 @@ class MoviesTable extends Component {
   ];
 
   deleteColumn = {key: "delete",
-  content: movie => {
-   return <button className="btn btn-danger btn-sm" onClick={() => this.props.onDelete(movie)}>Delete</button>      
-  }
+    content: movie => {
+    return <button className="btn btn-danger btn-sm" onClick={() => this.props.onDelete(movie)}>Delete</button>      
+    }
+  };
+
+  rentColumn = {key: "rent",
+    content: movie => {
+    return <button 
+            className="btn btn-primary" 
+            onClick={() => this.props.onRent(movie, authService.getCurrentUser())}>Rent</button>      
+    }
  };
 
   constructor() {
     super();
     const user = authService.getCurrentUser();
-    if (user && user.isAdmin){
-      this.columns.push(this.deleteColumn);
+    if (user){
+      this.columns.push(this.rentColumn);
+      if(user.isAdmin){
+        this.columns.push(this.deleteColumn);
+      }
     }
   }
-  
+
     render() { 
     const { movies, onSort, sortColumn } = this.props;
     return ( 
