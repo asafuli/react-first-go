@@ -14,18 +14,23 @@ class MoviesTable extends Component {
     {path: 'dailyRentalRate', label: 'Rate'},
     {key: "like",
      content: movie => <LikeBtn liked={movie.liked} onPress={() => this.props.onLike(movie)}/>
-    },
-    {key: "delete",
-     content: movie => {
-      if (!authService.getCurrentUser()){
-        return null
-      } else {
-        return <button className="btn btn-danger btn-sm" onClick={() => this.props.onDelete(movie)}>Delete</button>      
-      }
-     } 
-    },
+    }, 
   ];
 
+  deleteColumn = {key: "delete",
+  content: movie => {
+   return <button className="btn btn-danger btn-sm" onClick={() => this.props.onDelete(movie)}>Delete</button>      
+  }
+ };
+
+  constructor() {
+    super();
+    const user = authService.getCurrentUser();
+    if (user && user.isAdmin){
+      this.columns.push(this.deleteColumn);
+    }
+  }
+  
     render() { 
     const { movies, onSort, sortColumn } = this.props;
     return ( 

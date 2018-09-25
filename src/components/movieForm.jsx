@@ -67,12 +67,13 @@ class MovieForm extends Form {
   }
 
   render() { 
+    const emptyOption = <option key={0} value={0}></option>;
     return (
       <div>
         <h1>Movie Form</h1>
         <form onSubmit={this.handleSubmit}>
           {this.renderInput('title','Title')}
-          {this.renderSelectList('genreId','Genre', this.state.genres)}
+          {this.renderSelectList('genreId','Genre', [emptyOption, ...this.state.genres])}
           {this.renderInput('numberInStock','Number in Stock')}
           {this.renderInput('dailyRentalRate','Rate')}
           {this.renderButton('Save')}

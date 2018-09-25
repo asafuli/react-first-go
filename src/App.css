@@ -2,27 +2,6 @@
   text-align: center;
 }
 
-/*no   need for grid cause did with bootstrap row/column
-
-
-.container{
-  display: grid;
-  grid-template-columns: 200px 1fr;
-  grid-gap: 30px;
-  grid-auto-flow: column;
-  
-}
-
-.sidebar{
-  grid-column: auto;
-  padding-top: 10px
-}
-
-.main-section{
-  grid-column: auto;
-}
-*/
-
 .navbar{
   margin-bottom: 30px;
 }
@@ -41,4 +20,9 @@
 
 .sortColumn{
   cursor: pointer;
+}
+
+.navbar-right{
+  position: absolute;
+  right: 50px;
 }

@@ -78,7 +78,7 @@ class Movies extends Component {
     newMovies[index].liked = !newMovies[index].liked 
     this.setState({movies: newMovies});
   }
-
+  
   handlePageChange = page => {
     this.setState({ currentPage: page });
   }
