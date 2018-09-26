@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { getMovies, deleteMovie} from '../services/movieServices';
 import { getGenres } from '../services/genreServices';
 import { rentMovie } from '../services/userService';
+import { getUserRentals } from '../services/userService';
 import { toast } from 'react-toastify';
 import Pagination from './common/pagination';
 import ListGroup from './common/listGroup';
@@ -10,7 +11,7 @@ import {paginate} from '../utils/paginate';
 import _ from 'lodash';
 import {Link} from 'react-router-dom';
 import SearchBox from './common/searchBox';
-import { setJwt } from './../services/httpService';
+import loggerService from '../services/loggerService';
 
 class Movies extends Component {
 
@@ -20,6 +21,7 @@ class Movies extends Component {
     */
     movies: [],
     genres: [],
+    rentals: [],
     pageSize: 4,
     currentPage: 1,
     //selectedGenre: {}, --> will be added during render in an if condition
@@ -28,19 +30,13 @@ class Movies extends Component {
     selectedGenre: null,
   }
   
-  componentDidUpdate(prevProps, prevState) {
-
-    console.log("CompDidUpd : ", prevProps, prevState , this.props, this.state);
-  }
-
   async componentDidMount(){
-    console.log("movies: compDidMount");
     const {data: genresFromDB} = await getGenres();
-    console.log("movies: compDidMount - got back from getGenres with : ", genresFromDB);
     const {data: moviesFromDB} = await getMovies();
-    console.log("movies: compDidMount - got back from getMovies with : ", moviesFromDB);
     const genres = [{_id: '', name: 'All Genres'}, ...genresFromDB]
     this.setState({genres, movies: moviesFromDB});
+    const rentals = await getUserRentals(); 
+    this.setState({rentals});
   }
 
   handleDelete = async (movie) => {
@@ -63,8 +59,24 @@ class Movies extends Component {
     }
   }
 
-  handleRent = async (movie, user) => {
-    await rentMovie(movie, user);
+  handleRent = async (movie) => {
+    const originalRentals = [...this.state.rentals];
+    let newRentals = originalRentals;
+
+    if (!originalRentals.find(id => id === movie._id)){
+      newRentals.push(movie._id);
+    } else {
+      newRentals = originalRentals.filter(id => id !== movie._id);
+    }
+    
+    this.setState({rentals : newRentals});
+    try {
+      await rentMovie(movie);
+    } catch (error) {
+      loggerService.log(error);
+      this.setState({rentals : originalRentals});
+    }
+
   }
 
   handleGenreSelect = genre => {
@@ -111,7 +123,7 @@ class Movies extends Component {
     
   }
   render() { 
-    const { pageSize, currentPage, genres, selectedGenre, sortColumn } = this.state;
+    const { pageSize, currentPage, genres, selectedGenre, sortColumn, rentals } = this.state;
     const {totalCount: count, data: movies } = this.getPagedData();
     const { user } = this.props;
 
@@ -143,6 +155,7 @@ class Movies extends Component {
             onDelete={this.handleDelete} 
             onLike={this.toggle} 
             onRent={this.handleRent}
+            rentals={rentals}
             onSort={this.handleSort}
             sortColumn={sortColumn}
           />

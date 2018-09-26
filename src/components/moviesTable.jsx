@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import LikeBtn from './common/likeBtn';
 import Table from './common/table';
 import authService from '../services/authService';
+import RentButton from './rentButton';
 import {Link} from 'react-router-dom';
 
 
@@ -25,11 +26,12 @@ class MoviesTable extends Component {
 
   rentColumn = {key: "rent",
     content: movie => {
-    return <button 
-            className="btn btn-primary" 
-            onClick={() => this.props.onRent(movie, authService.getCurrentUser())}>Rent</button>      
+      console.log("this.props.rentals : " , this.props.rentals);
+      console.log("Movie id for ", movie.title, "is : ", movie._id);
+      const isRented = !(undefined === this.props.rentals.find(id => id === movie._id)); 
+      return <RentButton movie={movie} isRented={isRented} onPress={() => this.props.onRent(movie)}/>      
     }
- };
+  }
 
   constructor() {
     super();
@@ -42,15 +44,20 @@ class MoviesTable extends Component {
     }
   }
 
+
     render() { 
-    const { movies, onSort, sortColumn } = this.props;
+    const { movies, onSort, sortColumn, rentals } = this.props;
     return ( 
-      <Table 
-        items={movies} 
-        columns={this.columns} 
-        onSort={onSort} 
-        sortColumn={sortColumn} 
-      />
+      <React.Fragment>
+        {rentals &&
+        <Table 
+          items={movies} 
+          columns={this.columns} 
+          onSort={onSort} 
+          sortColumn={sortColumn} 
+        />
+        }
+      </React.Fragment>
     );
   }
 }

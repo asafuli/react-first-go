@@ -12,14 +12,18 @@ export function register(user){
   })
 }
 
-export function rentMovie(movie, user){
-  if(user._id){
-    const body = {...user};
-    delete(body._id);
-    delete(body.iat);
-    if (!body.rentals.find(id => id === movie._id)){
-      body.rentals.push(movie._id);
+export async function rentMovie(movie){
+
+  const {data : user} =  await http.get(`${usersEndPoint}/me`);
+    if (!user.rentals.find(id => id === movie._id)){
+      user.rentals.push(movie._id);
+    } else {
+      user.rentals = user.rentals.filter(id => id !== movie._id);
     }
-    return http.put(`${usersEndPoint}/${user._id}`, body);
-  }
+    return http.patch(`${usersEndPoint}/${user._id}`, {rentals: user.rentals});
+}
+
+export async function getUserRentals(){
+  const {data : user} =  await http.get(`${usersEndPoint}/me`);
+  return user.rentals
 }

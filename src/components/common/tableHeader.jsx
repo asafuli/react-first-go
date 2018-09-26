@@ -31,7 +31,7 @@ class TableHeader extends Component {
       <thead>
         <tr>
           {columns.map(column => 
-          <th key={column.path || column.key}className='sortColumn' onClick={() => this.raiseSort(column.path)}>{column.label} {this.renderSortIcon(column)}</th>)}
+          <th key={column.path || column.key} className='sortColumn' onClick={() => this.raiseSort(column.path)}>{column.label} {this.renderSortIcon(column)}</th>)}
         </tr>
       </thead>
     );
