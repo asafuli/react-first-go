@@ -3,13 +3,17 @@ import http from './httpService';
 
 const usersEndPoint = '/users';
 
-export function register(user){
-  return http.post(usersEndPoint, {
-    "name": user.name,
-    "email": user.username,
-    "password": user.password,
-    "rentals" : []
-  })
+export async function register(user){
+  try{
+    return await http.post(usersEndPoint, {
+      "name": user.name,
+      "email": user.username,
+      "password": user.password,
+      "rentals" : []
+    }, {withCredentials: true})
+  } catch(e){
+    console.log(e);
+  }
 }
 
 export async function rentMovie(movie){
@@ -24,6 +28,6 @@ export async function rentMovie(movie){
 }
 
 export async function getUserRentals(){
-  const {data : user} =  await http.get(`${usersEndPoint}/me`);
+  const {data : user} =  await http.get(`${usersEndPoint}/me`, {"Access-Control-Allow-Credentials": true});
   return user.rentals
 }

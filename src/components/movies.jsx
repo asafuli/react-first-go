@@ -12,6 +12,7 @@ import _ from 'lodash';
 import {Link} from 'react-router-dom';
 import SearchBox from './common/searchBox';
 import loggerService from '../services/loggerService';
+import {withCookies, Cookies} from 'react-cookie';
 
 class Movies extends Component {
 
@@ -123,6 +124,7 @@ class Movies extends Component {
     
   }
   render() { 
+
     const { pageSize, currentPage, genres, selectedGenre, sortColumn, rentals } = this.state;
     const {totalCount: count, data: movies } = this.getPagedData();
     const { user } = this.props;
@@ -171,4 +173,4 @@ class Movies extends Component {
   }
 }
  
-export default Movies;
+export default withCookies(Movies);

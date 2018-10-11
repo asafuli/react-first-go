@@ -26,8 +26,6 @@ class MoviesTable extends Component {
 
   rentColumn = {key: "rent",
     content: movie => {
-      console.log("this.props.rentals : " , this.props.rentals);
-      console.log("Movie id for ", movie.title, "is : ", movie._id);
       const isRented = !(undefined === this.props.rentals.find(id => id === movie._id)); 
       return <RentButton movie={movie} isRented={isRented} onPress={() => this.props.onRent(movie)}/>      
     }

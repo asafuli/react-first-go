@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import {Route, Switch, Redirect} from 'react-router-dom';
 import {ToastContainer} from 'react-toastify';
 import auth from './services/authService';
@@ -12,6 +12,7 @@ import RegisterForm from './components/registerForm';
 import MovieForm from './components/movieForm';
 import Logout from './components/common/logout';
 import ProtectedRoute from './components/common/protectedRoute';
+import {withCookies} from 'react-cookie';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 
@@ -24,17 +25,20 @@ componentDidMount = () => {
   this.setState({ user });
 }
 
+
   render() {
     const { user } = this.state;
+    const {allCookies, cookies} = this.props;
+    console.log(allCookies, cookies);
     return (
       <React.Fragment>
         <ToastContainer />
         <NavBar user={user}/>
         <main className='container'>
           <Switch>
-            <Route path="/login" component={LoginForm} />
+            <Route path="/login" render={(props) => <LoginForm {...props} allCookies={this.props.cookies}  />}/>
             <ProtectedRoute path="/movies/:id" component={MovieForm} />
-            <Route path="/movies" render={props => <Movies {...props} user={user} />}/>
+            <Route path="/movies" render={props => <Movies {...props} user={user} cookies={this.props.cookies} />}/>
             <Route path="/customers" component={Customers}/>
             <ProtectedRoute path="/rentals" component={Rentals} />
             <Route path="/register" component={RegisterForm}/>
@@ -49,4 +53,4 @@ componentDidMount = () => {
   }
 }
 
-export default App;
+export default withCookies(App);
