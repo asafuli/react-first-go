@@ -18,7 +18,7 @@ export async function register(user){
 
 export async function rentMovie(movie){
 
-  const {data : user} =  await http.get(`${usersEndPoint}/me`);
+  const {data : user} =  await http.get(`${usersEndPoint}/me`, {withCredentials: true});
     if (!user.rentals.find(id => id === movie._id)){
       user.rentals.push(movie._id);
     } else {
@@ -28,6 +28,6 @@ export async function rentMovie(movie){
 }
 
 export async function getUserRentals(){
-  const {data : user} =  await http.get(`${usersEndPoint}/me`, {"Access-Control-Allow-Credentials": true});
+  const {data : user} =  await http.get(`${usersEndPoint}/me`, {withCredentials: true});
   return user.rentals
 }
